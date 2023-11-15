@@ -3,7 +3,7 @@ const path = require('path')
 const uploadConfig = require('../configs/upload')
 
 class DiskStorage {
-  async saveFile() {
+  async saveFile(file) {
     await fs.promises.rename(
       path.resolve(uploadConfig.TMP_FOLDER, file),
       path.resolve(uploadConfig.UPLOAD_FOLDER, file)
