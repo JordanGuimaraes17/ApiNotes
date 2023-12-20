@@ -35,4 +35,3 @@ const PORT = process.env.PORT || 3333
 
 // Iniciando o servidor para escutar a porta especificada
 app.listen(PORT, () => console.log(`Server is running on Port Jordan ${PORT}`))
-// jordan
