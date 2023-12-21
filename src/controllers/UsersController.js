@@ -31,19 +31,26 @@ class UserController {
     }
     user.name = name ?? user.name
     user.email = email ?? user.email
+    if (password) {
+      if (!old_password) {
+        throw new AppError(
+          'Você deve digitar sua senha antiga para alterar a senha'
+        )
+      }
 
-    if (!old_password || !password) {
+      const checkOldPassword = await compare(old_password, user.password)
+
+      if (!checkOldPassword) {
+        throw new AppError('A senha antiga não confere.')
+      }
+
+      user.password = await hash(password, 8)
+    } else if (old_password) {
       throw new AppError(
-        'Você precisa informar tanto a senha antiga quanto a nova senha para atualizar.'
+        'Você deve fornecer uma nova senha para alterar a senha antiga.'
       )
     }
-    if (password && old_password) {
-      const checkOldPassword = await compare(old_password, user.password)
-      if (!checkOldPassword) {
-        throw new AppError('A senha não confere.')
-      }
-      user.password = await hash(password, 8)
-    }
+
     await database.run(
       `UPDATE users SET
       name = ?,
